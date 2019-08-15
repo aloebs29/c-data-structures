@@ -3,7 +3,7 @@
 #include "dvector.h"
 
 // Helper function
-void push_vec_range(dvector *vec, int start_val, int end_val)
+void push_vec_range(dvector_t *vec, int start_val, int end_val)
 {
   for (int i = start_val; i < end_val; i++)
   {
@@ -13,14 +13,14 @@ void push_vec_range(dvector *vec, int start_val, int end_val)
 // Tests for functions used by other tests..
 void test_new()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   TEST_ASSERT_EQUAL(DEFAULT_CAPACITY, dvector_capacity(vec));
   dvector_destroy(vec);
 }
 
 void test_at_and_push() // these two are inseperably reliant on eachother
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   push_vec_range(vec, 0, 12);
   TEST_ASSERT_EQUAL(6, dvector_at(vec, 6));
   dvector_destroy(vec);
@@ -28,7 +28,7 @@ void test_at_and_push() // these two are inseperably reliant on eachother
 
 void test_pop()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   push_vec_range(vec, 0, 12);
   // Verify correct return
   TEST_ASSERT_EQUAL(11, dvector_pop(vec));
@@ -40,7 +40,7 @@ void test_pop()
 // // All other tests in same order as header
 void test_size()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   TEST_ASSERT_EQUAL(0, dvector_size(vec));
   push_vec_range(vec, 0, 12);
   TEST_ASSERT_EQUAL(12, dvector_size(vec));
@@ -50,7 +50,7 @@ void test_size()
 void test_capacity()
 {
   // Default capacity
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   TEST_ASSERT_EQUAL(DEFAULT_CAPACITY, dvector_capacity(vec));
   dvector_destroy(vec);
 
@@ -68,14 +68,14 @@ void test_capacity()
 
 void test_is_empty()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   TEST_ASSERT_EQUAL(true, dvector_is_empty(vec));
   dvector_destroy(vec);
 }
 
 void test_insert()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   push_vec_range(vec, 0, 12);
   dvector_insert(vec, 3, 100);
   // Verify item is where we wanted it
@@ -87,7 +87,7 @@ void test_insert()
 
 void test_prepend()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   push_vec_range(vec, 0, 12);
   dvector_prepend(vec, 100);
   // Verify item is where we wanted it
@@ -99,7 +99,7 @@ void test_prepend()
 
 void test_delete()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   push_vec_range(vec, 0, 12);
   // Verify return value
   TEST_ASSERT_EQUAL(5, dvector_delete(vec, 5));
@@ -114,7 +114,7 @@ void test_delete()
 
 void test_remove()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   push_vec_range(vec, 0, 12);
   dvector_insert(vec, 10, 7);
   dvector_prepend(vec, 7);
@@ -133,7 +133,7 @@ void test_remove()
 
 void test_resize()
 {
-  dvector * vec = dvector_new(0);
+  dvector_t * vec = dvector_new(0);
   push_vec_range(vec, 0, DEFAULT_CAPACITY + 1);
   // Verify capacity grew
   TEST_ASSERT_EQUAL(DEFAULT_CAPACITY * GROWTH_FACTOR, dvector_capacity(vec));

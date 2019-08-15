@@ -4,18 +4,18 @@
 
 // Private function prototypes
 static int calculate_capacity(int capacity);
-static void resize(dvector *vec, int new_capacity);
+static void resize(dvector_t *vec, int new_capacity);
 // Grows vector if needed to add item
-static void secure_capacity_for_add(dvector *vec);
+static void secure_capacity_for_add(dvector_t *vec);
 // Shrinks vector if _size is less than capacity/SHRINK_AT_DIVISOR 
-static void reduce_capacity_if_able(dvector *vec);
+static void reduce_capacity_if_able(dvector_t *vec);
 
 // Public functions
-dvector *dvector_new(int capacity)
+dvector_t *dvector_new(int capacity)
 {
   int calculated_cap = calculate_capacity(capacity);
 
-  dvector *vec = (dvector *)malloc(sizeof(dvector));
+  dvector_t *vec = (dvector_t *)malloc(sizeof(dvector_t));
   vec->_size = 0;
   vec->_capacity = calculated_cap;
   vec->_data = (int *)malloc(sizeof(int) * calculated_cap);
@@ -23,28 +23,28 @@ dvector *dvector_new(int capacity)
   return vec;
 }
 
-void dvector_destroy(dvector *vec)
+void dvector_destroy(dvector_t *vec)
 {
   free(vec->_data);
   free(vec);
 }
 
-int dvector_capacity(dvector *vec)
+int dvector_capacity(dvector_t *vec)
 {
   return vec->_capacity;
 }
 
-int dvector_size(dvector *vec)
+int dvector_size(dvector_t *vec)
 {
   return vec->_size;
 }
 
-bool dvector_is_empty(dvector *vec)
+bool dvector_is_empty(dvector_t *vec)
 {
   return vec->_size == 0;
 }
 
-int dvector_at(dvector *vec, int index)
+int dvector_at(dvector_t *vec, int index)
 {
   // Validate index
   if ((index < 0) || (index >= vec->_size))
@@ -56,7 +56,7 @@ int dvector_at(dvector *vec, int index)
   return *address;
 }
 
-void dvector_push(dvector *vec, int item)
+void dvector_push(dvector_t *vec, int item)
 {
   secure_capacity_for_add(vec);
   // Add item, increment _size
@@ -65,7 +65,7 @@ void dvector_push(dvector *vec, int item)
   vec->_size++;
 }
 
-void dvector_insert(dvector *vec, int index, int item)
+void dvector_insert(dvector_t *vec, int index, int item)
 {
   // Validate index (we will allow inserting onto the end (essentially a push))
   if ((index < 0) || (index > vec->_size))
@@ -87,12 +87,12 @@ void dvector_insert(dvector *vec, int index, int item)
   *address = item;
 }
 
-void dvector_prepend(dvector *vec, int item)
+void dvector_prepend(dvector_t *vec, int item)
 {
   dvector_insert(vec, 0, item);
 }
 
-int dvector_pop(dvector *vec)
+int dvector_pop(dvector_t *vec)
 {
   // Store value to be popped
   int * address = (int *)(vec->_data + vec->_size - 1);
@@ -105,7 +105,7 @@ int dvector_pop(dvector *vec)
   return value;
 }
 
-int dvector_delete(dvector *vec, int index)
+int dvector_delete(dvector_t *vec, int index)
 {
   // Validate index
   if ((index < 0) || (index >= vec->_size))
@@ -128,7 +128,7 @@ int dvector_delete(dvector *vec, int index)
   return item_to_delete_value;
 }
 
-int dvector_remove(dvector *vec, int value)
+int dvector_remove(dvector_t *vec, int value)
 {
   for (int i = 0; i < vec->_size; i ++)
   {
@@ -145,7 +145,7 @@ int dvector_remove(dvector *vec, int value)
   // internally
 }
 
-int dvector_find(dvector *vec, int value)
+int dvector_find(dvector_t *vec, int value)
 {
   for (int i = 0; i < vec->_size; i ++)
   {
@@ -170,7 +170,7 @@ static int calculate_capacity(int capacity)
   }
   return calculated_cap;
 }
-static void resize(dvector *vec, int new_capacity)
+static void resize(dvector_t *vec, int new_capacity)
 {
   int * new_data = (int *)malloc(sizeof(int) * new_capacity);
   for (int i = 0; i < vec->_size; i ++)
@@ -183,7 +183,7 @@ static void resize(dvector *vec, int new_capacity)
   vec->_data = new_data;
   vec->_capacity = new_capacity;
 }
-static void secure_capacity_for_add(dvector *vec)
+static void secure_capacity_for_add(dvector_t *vec)
 {
   if (vec->_size == vec->_capacity)
   {
@@ -191,7 +191,7 @@ static void secure_capacity_for_add(dvector *vec)
     resize(vec, new_cap);
   }
 }
-static void reduce_capacity_if_able(dvector *vec)
+static void reduce_capacity_if_able(dvector_t *vec)
 {
   if ((vec->_size <= (vec->_capacity / SHRINK_AT_DIVISOR)) &&
       (vec->_capacity != DEFAULT_CAPACITY))
