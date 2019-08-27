@@ -1,5 +1,6 @@
 #include "dvector.h"
 #include <stdlib.h> // malloc, free
+#include "helpers.h" // error_print_and_quit
 
 
 // Private function prototypes
@@ -49,7 +50,7 @@ int dvector_at(dvector_t *vec, int index)
   // Validate index
   if ((index < 0) || (index >= vec->_size))
   {
-    exit(EXIT_FAILURE);
+    error_print_and_quit("dvector_at index out of range.");
   }
 
   int * address = (int *)(vec->_data + index);
@@ -70,7 +71,7 @@ void dvector_insert(dvector_t *vec, int index, int item)
   // Validate index (we will allow inserting onto the end (essentially a push))
   if ((index < 0) || (index > vec->_size))
   {
-    exit(EXIT_FAILURE);
+    error_print_and_quit("dvector_insert index out of range.");
   }
 
   secure_capacity_for_add(vec);
@@ -110,7 +111,7 @@ int dvector_delete(dvector_t *vec, int index)
   // Validate index
   if ((index < 0) || (index >= vec->_size))
   {
-    exit(EXIT_FAILURE);
+    error_print_and_quit("dvector_delete index out of range.");
   }
   // We need to return the item we delete
   int * item_to_delete_address = (int *)(vec->_data + index);

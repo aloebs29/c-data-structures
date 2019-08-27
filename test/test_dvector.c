@@ -2,6 +2,9 @@
 #include "unity.h"
 #include "dvector.h"
 
+// Force linkage
+TEST_FILE("helpers.c");
+
 // Helper function
 void push_vec_range(dvector_t *vec, int start_val, int end_val)
 {

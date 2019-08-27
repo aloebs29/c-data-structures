@@ -6,9 +6,10 @@ int main(int argc, char **argv)
 {
   printf("Data structures implemented:\n");
   printf("\t- Dynamic array (dvector_t).\n");
+  printf("\t- Singly-linked list (dforward_list_t).\n");
 
   printf("\nGo to root project folder, and run \"ceedling test:all\" to run tests.\n");
-  printf("Press ENTER key to continue.\n");
+  printf("Press ENTER key to exit.\n");
   getchar();
 
   return EXIT_SUCCESS;
