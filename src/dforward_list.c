@@ -23,9 +23,9 @@ void dforward_list_destroy(dforward_list_t * list)
   node_t * current = list->_head;
   while (current != NULL)
   {
-    node_t * _next = current->_next;
+    node_t * next = current->_next;
     node_destroy(current);
-    current = _next;
+    current = next;
   }
 
   // Free list
