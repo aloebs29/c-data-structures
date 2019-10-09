@@ -1,6 +1,7 @@
 #include "dkey_val_list.h"
 #include <stdlib.h> // malloc, free, NULL
 #include <string.h> // strlen, strcpy, strcmp
+#include "helpers.h" // error_print_and_quit
 
 // typedef struct {
 //   char * _key;
@@ -67,6 +68,28 @@ void dkey_val_list_push_back(dkey_val_list_t * list, const char * key,
     list->_tail->_next = node;
     list->_tail = node;
   }
+}
+
+int dkey_val_list_pop_front(dkey_val_list_t * list)
+{
+  if (dkey_val_list_is_empty(list))
+  {
+    error_print_and_quit("dkey_val_list_pop_front list must contain elements.");
+  }
+  key_val_node_t * item = list->_head;
+  if (item->_next == NULL)
+  {
+    list->_head = NULL;
+    list->_tail = NULL;
+  }
+  else
+  {
+    list->_head = item->_next;
+  }
+
+  int val = item->_data->_value;
+  key_val_node_destroy(item);
+  return val;
 }
 
 bool dkey_val_list_try_get(dkey_val_list_t * list, const char * key, int * out)

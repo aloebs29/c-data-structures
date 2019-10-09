@@ -15,6 +15,7 @@
   ---------------------------*/
 
 // Force linkage
+TEST_FILE("helpers.c");
 TEST_FILE("dkey_val_list.c");
 
 dhash_table_t * table = NULL;

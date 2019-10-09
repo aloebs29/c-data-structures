@@ -28,6 +28,8 @@ bool dkey_val_list_is_empty(dkey_val_list_t * list);
 // Adds item to end of list
 void dkey_val_list_push_back(dkey_val_list_t * list, const char * key,
     int value);
+// Removes item from front and returns value stored there
+int dkey_val_list_pop_front(dkey_val_list_t * list);
 // Attempts to get value associated with key
 bool dkey_val_list_try_get(dkey_val_list_t * list, const char * key, int * out);
 // Attempts to update the value associated with key

@@ -128,8 +128,15 @@ int dforward_list_pop_front(dforward_list_t * list)
   {
     error_print_and_quit("dforward_list_pop_front list must contain elements.");
   }
-  node_t * item = list->_head;
-  list->_head = item->_next;
+  node_t * item = list->_head;if (item->_next == NULL)
+  {
+    list->_head = NULL;
+    list->_tail = NULL;
+  }
+  else
+  {
+    list->_head = item->_next;
+  }
 
   int val = item->_key;
   node_destroy(item);
