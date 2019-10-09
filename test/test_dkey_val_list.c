@@ -1,18 +1,20 @@
 #include "unity.h"
 #include "dkey_val_list.h"
 
+dkey_val_list_t * list = NULL;
+
 void setUp(void)
 {
+    list = dkey_val_list_new();
 }
 
 void tearDown(void)
 {
+    dkey_val_list_destroy(list);
 }
 
 void test_push_back()
 {
-    dkey_val_list_t * list = dkey_val_list_new();
-
     dkey_val_list_push_back(list, "one", 1);
     dkey_val_list_push_back(list, "two", 2);
     dkey_val_list_push_back(list, "three", 3);
@@ -25,26 +27,18 @@ void test_push_back()
 
     TEST_ASSERT_EQUAL_STRING("three", list->_tail->_data->_key);
     TEST_ASSERT_EQUAL(3, list->_tail->_data->_value);
-
-    dkey_val_list_destroy(list);
 }
 
 void test_is_empty()
 {
-    dkey_val_list_t * list = dkey_val_list_new();
-
     TEST_ASSERT_TRUE(dkey_val_list_is_empty(list));
 
     dkey_val_list_push_back(list, "one", 1);
     TEST_ASSERT_FALSE(dkey_val_list_is_empty(list));
-
-    dkey_val_list_destroy(list);
 }
 
 void test_try_get()
 {
-    dkey_val_list_t * list = dkey_val_list_new();
-
     int out = 42;
 
     TEST_ASSERT_FALSE(dkey_val_list_try_get(list, "one", &out));
@@ -60,14 +54,10 @@ void test_try_get()
     TEST_ASSERT_EQUAL(2, out);
     TEST_ASSERT_TRUE(dkey_val_list_try_get(list, "three", &out));
     TEST_ASSERT_EQUAL(3, out);
-
-    dkey_val_list_destroy(list);
 }
 
 void test_try_update()
 {
-    dkey_val_list_t * list = dkey_val_list_new();
-
     // Works on empty list
     TEST_ASSERT_FALSE(dkey_val_list_try_update(list, "one", 1));
     // Success case
@@ -80,14 +70,10 @@ void test_try_update()
     TEST_ASSERT_FALSE(dkey_val_list_try_update(list, "two", 2));
     dkey_val_list_try_get(list, "one", &out);
     TEST_ASSERT_EQUAL(29, out);
-
-    dkey_val_list_destroy(list);
 }
 
 void test_remove()
 {
-    dkey_val_list_t * list = dkey_val_list_new();
-
     // Removing from empty list works
     TEST_ASSERT_FALSE(dkey_val_list_remove(list, "abc"));
 
@@ -121,20 +107,4 @@ void test_remove()
 
     // Removing non-existent value
     TEST_ASSERT_FALSE(dkey_val_list_remove(list, "abc"));
-
-    dkey_val_list_destroy(list);
 }
-
-// // Creates an empty list
-// dkey_val_list_t * dkey_val_list_new();
-// // Destroys list
-// void dkey_val_list_destroy(dkey_val_list_t * list);
-// // Returns true if empty
-// bool dkey_val_list_is_empty(dkey_val_list_t * list);
-// // Adds item to end of list
-// void dkey_val_list_push_back(dkey_val_list_t * list, const char * key,
-//     int value);
-// // Attempts to get value associated with key
-// bool dkey_val_list_try_get(dkey_val_list_t * list, const char * key, int * out);
-// // Removes item from list if it exists
-// void dkey_val_list_remove(dkey_val_list_t * list, const char * key);
