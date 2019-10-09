@@ -88,10 +88,13 @@ void test_remove()
 {
     dkey_val_list_t * list = dkey_val_list_new();
 
-    dkey_val_list_push_back(list, "one", 1);
+    // Removing from empty list works
+    TEST_ASSERT_FALSE(dkey_val_list_remove(list, "abc"));
+
     // Removing only item works
+    dkey_val_list_push_back(list, "one", 1);
+    TEST_ASSERT_TRUE(dkey_val_list_remove(list, "one"));
     int out = 42;
-    dkey_val_list_remove(list, "one");
     TEST_ASSERT_FALSE(dkey_val_list_try_get(list, "one", &out));
 
     dkey_val_list_push_back(list, "one", 1);
@@ -101,20 +104,23 @@ void test_remove()
     dkey_val_list_push_back(list, "five", 5);
 
     // Removing head doesn't throw off list
-    dkey_val_list_remove(list, "one");
+    TEST_ASSERT_TRUE(dkey_val_list_remove(list, "one"));
     TEST_ASSERT_FALSE(dkey_val_list_try_get(list, "one", &out));
     TEST_ASSERT_TRUE(dkey_val_list_try_get(list, "two", &out));
     TEST_ASSERT_EQUAL(2, out);
 
     // Removing middle
-    dkey_val_list_remove(list, "three");
+    TEST_ASSERT_TRUE(dkey_val_list_remove(list, "three"));
     TEST_ASSERT_FALSE(dkey_val_list_try_get(list, "three", &out));
 
     // Removing tail doesn't throw off list
-    dkey_val_list_remove(list, "five");
+    TEST_ASSERT_TRUE(dkey_val_list_remove(list, "five"));
     TEST_ASSERT_FALSE(dkey_val_list_try_get(list, "five", &out));
     TEST_ASSERT_TRUE(dkey_val_list_try_get(list, "four", &out));
     TEST_ASSERT_EQUAL(4, out);
+
+    // Removing non-existent value
+    TEST_ASSERT_FALSE(dkey_val_list_remove(list, "abc"));
 
     dkey_val_list_destroy(list);
 }

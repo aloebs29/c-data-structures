@@ -133,11 +133,11 @@ bool dkey_val_list_try_update(dkey_val_list_t * list, const char * key, int valu
   return false;
 }
 
-void dkey_val_list_remove(dkey_val_list_t * list, const char *key)
+bool dkey_val_list_remove(dkey_val_list_t * list, const char *key)
 {
   if (dkey_val_list_is_empty(list))
   {
-    return;
+    return false;
   }
 
   key_val_node_t *current = list->_head;
@@ -157,6 +157,7 @@ void dkey_val_list_remove(dkey_val_list_t * list, const char *key)
       list->_head = next;
     }
     key_val_node_destroy(current);
+    return true;
   }
 
   // Wasn't the head, start searching rest of list
@@ -171,11 +172,14 @@ void dkey_val_list_remove(dkey_val_list_t * list, const char *key)
         list->_tail = current;
       }
       key_val_node_destroy(next);
-      return;
+      return true;
     }
     current = next;
     next = current->_next;
   }
+
+  // Didn't find the value
+  return false;
 }
 
 

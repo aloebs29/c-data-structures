@@ -32,7 +32,7 @@ void dkey_val_list_push_back(dkey_val_list_t * list, const char * key,
 bool dkey_val_list_try_get(dkey_val_list_t * list, const char * key, int * out);
 // Attempts to update the value associated with key
 bool dkey_val_list_try_update(dkey_val_list_t * list, const char * key, int value);
-// Removes item from list if it exists
-void dkey_val_list_remove(dkey_val_list_t * list, const char * key);
+// Removes item from list if it exists, returns true if removed
+bool dkey_val_list_remove(dkey_val_list_t * list, const char * key);
 
 #endif // _DKEY_VAL_LIST_H

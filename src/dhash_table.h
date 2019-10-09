@@ -2,12 +2,13 @@
 #define _DHASH_TABLE_H
 
 #include <stdbool.h> // bool
+#include <stdint.h> // int types
 #include "dkey_val_list.h" // dkey_val_list_t, associated functions
 
 typedef struct {
-  int _capacity;
-  int _count;
-  dkey_val_list_t * _data;
+  uint32_t _table_size;
+  uint32_t _count;
+  dkey_val_list_t ** _data;
 } dhash_table_t;
 
 // Creates an empty hash table

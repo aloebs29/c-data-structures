@@ -3,6 +3,7 @@
     "stdlib.h": "c",
     "stdio.h": "c",
     "error_handling.h": "c",
-    "unity.h": "c"
+    "unity.h": "c",
+    "stdint.h": "c"
   }
 }
