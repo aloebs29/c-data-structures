@@ -42,12 +42,12 @@ void test_add()
   dhash_table_add(table, "neurospora", 6);
   TEST_ASSERT_EQUAL(6, table->_count);
 
-  TEST_ASSERT_EQUAL(1, table->_data[39]->_head->_data->_value);
-  TEST_ASSERT_EQUAL(2, table->_data[31]->_head->_data->_value);
-  TEST_ASSERT_EQUAL(3, table->_data[29]->_head->_data->_value);
-  TEST_ASSERT_EQUAL(4, table->_data[33]->_head->_data->_value);
-  TEST_ASSERT_EQUAL(5, table->_data[19]->_head->_data->_value);
-  TEST_ASSERT_EQUAL(6, table->_data[19]->_tail->_data->_value);
+  TEST_ASSERT_EQUAL(1, table->_data[39]->_head->_data->value);
+  TEST_ASSERT_EQUAL(2, table->_data[31]->_head->_data->value);
+  TEST_ASSERT_EQUAL(3, table->_data[29]->_head->_data->value);
+  TEST_ASSERT_EQUAL(4, table->_data[33]->_head->_data->value);
+  TEST_ASSERT_EQUAL(5, table->_data[19]->_head->_data->value);
+  TEST_ASSERT_EQUAL(6, table->_data[19]->_tail->_data->value);
 }
 
 void test_exists()
@@ -111,5 +111,34 @@ void test_remove()
 
 void test_resize()
 {
-  TEST_IGNORE_MESSAGE("Need to implement hash table resize.");
+  // Based on GROW_AT_SCALE_FACTOR and default size, we need 512 entries to resize
+  char buffer[16];
+  for (int i = 0; i < 511; i++)
+  {
+    sprintf(buffer, "test_%d", i);
+    dhash_table_add(table, buffer, i);
+  }
+
+  // Make sure it didn't grow yet
+  TEST_ASSERT_EQUAL(64, table->_table_size);
+  dhash_table_add(table, "test_511", 511);
+
+  // Make sure it grew
+  TEST_ASSERT_EQUAL(2048, table->_table_size); // based on growth factor
+
+  // Test random values
+  int out = 42;
+  dhash_table_try_get(table, "test_511", &out);
+  TEST_ASSERT_EQUAL(511, out);
+  dhash_table_try_get(table, "test_51", &out);
+  TEST_ASSERT_EQUAL(51, out);
+  dhash_table_try_get(table, "test_232", &out);
+  TEST_ASSERT_EQUAL(232, out);
+  dhash_table_try_get(table, "test_0", &out);
+  TEST_ASSERT_EQUAL(0, out);
+
+  // Make sure adding new value works
+  dhash_table_add(table, "one", 1);
+  dhash_table_try_get(table, "one", &out);
+  TEST_ASSERT_EQUAL(1, out);
 }

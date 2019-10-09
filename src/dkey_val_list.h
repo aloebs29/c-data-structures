@@ -4,12 +4,12 @@
 #include <stdbool.h> // bool
 
 typedef struct {
-  char * _key;
-  int _value;
-} key_val_pair_t;
+  char * key;
+  int value;
+} dkey_val_pair_t;
 
 typedef struct key_val_node {
-  key_val_pair_t * _data;
+  dkey_val_pair_t * _data;
   struct key_val_node * _next;
 } key_val_node_t;
 
@@ -23,13 +23,17 @@ typedef struct {
 dkey_val_list_t * dkey_val_list_new();
 // Destroys list
 void dkey_val_list_destroy(dkey_val_list_t * list);
+// Creates empty key val pair
+dkey_val_pair_t * dkey_val_pair_new(const char * key, int value);
+// Destroys key val pair
+void dkey_val_pair_destroy(dkey_val_pair_t * pair);
 // Returns true if empty
 bool dkey_val_list_is_empty(dkey_val_list_t * list);
 // Adds item to end of list
 void dkey_val_list_push_back(dkey_val_list_t * list, const char * key,
     int value);
 // Removes item from front and returns value stored there
-int dkey_val_list_pop_front(dkey_val_list_t * list);
+dkey_val_pair_t * dkey_val_list_pop_front(dkey_val_list_t * list);
 // Attempts to get value associated with key
 bool dkey_val_list_try_get(dkey_val_list_t * list, const char * key, int * out);
 // Attempts to update the value associated with key

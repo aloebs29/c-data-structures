@@ -16,6 +16,7 @@ static dhash_table_t * new_table(int table_size);
 static uint32_t hash(const char * key, uint32_t table_size);
 static void upsize_if_needed(dhash_table_t * table);
 static void downsize_if_needed(dhash_table_t * table);
+static void rehash_table(dhash_table_t * table, uint32_t new_table_size);
 
 // Public functions
 dhash_table_t * dhash_table_new()
@@ -51,9 +52,8 @@ void dhash_table_add(dhash_table_t * table, const char * key, int value)
   {
     dkey_val_list_push_back(table->_data[slot], key, value);
     table->_count++;
+    upsize_if_needed(table);
   }
-
-  // TODO: Check for upsize
 }
 
 bool dhash_table_exists(dhash_table_t * table, const char * key)
@@ -83,7 +83,7 @@ void dhash_table_remove(dhash_table_t * table, const char * key)
     if (dkey_val_list_remove(table->_data[slot], key))
     {
       table->_count--;
-      // TODO: Check for downsize
+      downsize_if_needed(table);
     }
   }
 }
@@ -124,20 +124,58 @@ static void upsize_if_needed(dhash_table_t * table)
   int load_factor = table->_count / table->_table_size;
   if (load_factor >= GROW_AT_LOAD_FACTOR)
   {
-    dhash_table_t * grown_table = new_table(table->_table_size * GROWTH_FACTOR);
-
-    // Rehash
-    for (int i = 0; i < table->_table_size; i++)
-    {
-      if (table->_data[i] != NULL)
-      {
-        //key_val_pair_t * current = dkey_val_list_pop
-      }
-    }
+    rehash_table(table, table->_table_size * GROWTH_FACTOR);
   }
 }
 
 static void downsize_if_needed(dhash_table_t * table)
 {
+  int load_divisor = table->_table_size / table->_count; // inverse of load factor
+  if ((load_divisor >= SHRINK_AT_LOAD_DIVISOR) &&
+      (table->_table_size > DEFAULT_TABLE_SIZE)) // default will serve as the minimum
+  {
+    rehash_table(table, table->_table_size / SHRINK_FACTOR);
+  }
+}
 
+static void rehash_table(dhash_table_t * table, uint32_t new_table_size)
+{
+  // Malloc new data and set to null
+  dkey_val_list_t ** new_data = (dkey_val_list_t **)
+      (malloc(sizeof(dkey_val_list_t *) * new_table_size));
+  for (int i = 0; i < new_table_size; i++)
+  {
+    new_data[i] = NULL;
+  }
+
+  // Iterate through old data
+  for (int i = 0; i < table->_table_size; i++)
+  {
+    if (table->_data[i] != NULL)
+    {
+      if (!dkey_val_list_is_empty(table->_data[i]))
+      {
+        dkey_val_pair_t * current = dkey_val_list_pop_front(table->_data[i]);
+        while (current != NULL)
+        {
+          // Add to new table
+          uint32_t slot = hash(current->key, new_table_size);
+          if (new_data[slot] == NULL)
+          {
+            new_data[slot] = dkey_val_list_new();
+          }
+          dkey_val_list_push_back(new_data[slot], current->key, current->value);
+
+          dkey_val_pair_destroy(current);
+          current = dkey_val_list_pop_front(table->_data[i]);
+        }
+      }
+
+      dkey_val_list_destroy(table->_data[i]);
+    }
+  }
+
+  free(table->_data);
+  table->_data = new_data;
+  table->_table_size = new_table_size;
 }

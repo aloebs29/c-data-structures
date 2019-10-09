@@ -22,27 +22,33 @@ void test_push_back()
   dkey_val_list_push_back(list, "two", 2);
   dkey_val_list_push_back(list, "three", 3);
 
-  TEST_ASSERT_EQUAL_STRING("one", list->_head->_data->_key);
-  TEST_ASSERT_EQUAL(1, list->_head->_data->_value);
+  TEST_ASSERT_EQUAL_STRING("one", list->_head->_data->key);
+  TEST_ASSERT_EQUAL(1, list->_head->_data->value);
 
-  TEST_ASSERT_EQUAL_STRING("two", list->_head->_next->_data->_key);
-  TEST_ASSERT_EQUAL(2, list->_head->_next->_data->_value);
+  TEST_ASSERT_EQUAL_STRING("two", list->_head->_next->_data->key);
+  TEST_ASSERT_EQUAL(2, list->_head->_next->_data->value);
 
-  TEST_ASSERT_EQUAL_STRING("three", list->_tail->_data->_key);
-  TEST_ASSERT_EQUAL(3, list->_tail->_data->_value);
+  TEST_ASSERT_EQUAL_STRING("three", list->_tail->_data->key);
+  TEST_ASSERT_EQUAL(3, list->_tail->_data->value);
 }
 
 void test_pop_front()
 {
   dkey_val_list_push_back(list, "one", 1);
-  TEST_ASSERT_EQUAL(1, dkey_val_list_pop_front(list));
+  dkey_val_pair_t * pair = dkey_val_list_pop_front(list);
+  TEST_ASSERT_EQUAL(1, pair->value);
+  dkey_val_pair_destroy(pair);
   TEST_ASSERT_NULL(list->_head);
   TEST_ASSERT_NULL(list->_tail);
 
   dkey_val_list_push_back(list, "two", 2);
   dkey_val_list_push_back(list, "three", 3);
-  TEST_ASSERT_EQUAL(2, dkey_val_list_pop_front(list));
-  TEST_ASSERT_EQUAL(3, dkey_val_list_pop_front(list));
+  pair = dkey_val_list_pop_front(list);
+  TEST_ASSERT_EQUAL(2, pair->value);
+  dkey_val_pair_destroy(pair);
+  pair = dkey_val_list_pop_front(list);
+  TEST_ASSERT_EQUAL(3, pair->value);
+  dkey_val_pair_destroy(pair);
 }
 
 void test_try_get()

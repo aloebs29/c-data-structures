@@ -1,26 +1,8 @@
 #include "dkey_val_list.h"
 #include <stdlib.h> // malloc, free, NULL
 #include <string.h> // strlen, strcpy, strcmp
-#include "helpers.h" // error_print_and_quit
-
-// typedef struct {
-//   char * _key;
-//   int _value;
-// } key_val_pair_t;
-
-// typedef struct key_val_node {
-//   key_val_pair_t _data;
-//   struct key_val_node * _next;
-// } key_val_node_t;
-
-// typedef struct {
-//   key_val_node_t * _head;
-//   key_val_node_t * _tail;
-// } dkey_val_list_t;
 
 // Private function prototypes
-key_val_pair_t * key_val_pair_new(const char * key, int value);
-void key_val_pair_destroy(key_val_pair_t * pair);
 key_val_node_t * key_val_node_new(const char * key, int value);
 void key_val_node_destroy(key_val_node_t * node);
 
@@ -48,6 +30,24 @@ void dkey_val_list_destroy(dkey_val_list_t * list)
   free(list);
 }
 
+dkey_val_pair_t * dkey_val_pair_new(const char * key, int value)
+{
+  dkey_val_pair_t * pair = (dkey_val_pair_t *)(malloc(sizeof(dkey_val_pair_t)));
+
+  pair->key = (char *)(malloc(strlen(key) + 1));
+  strcpy(pair->key, key);
+
+  pair->value = value;
+
+  return pair;
+}
+
+void dkey_val_pair_destroy(dkey_val_pair_t *pair)
+{
+  free(pair->key);
+  free(pair);
+}
+
 bool dkey_val_list_is_empty(dkey_val_list_t * list)
 {
   return (list->_head == NULL);
@@ -70,11 +70,11 @@ void dkey_val_list_push_back(dkey_val_list_t * list, const char * key,
   }
 }
 
-int dkey_val_list_pop_front(dkey_val_list_t * list)
+dkey_val_pair_t * dkey_val_list_pop_front(dkey_val_list_t * list)
 {
   if (dkey_val_list_is_empty(list))
   {
-    error_print_and_quit("dkey_val_list_pop_front list must contain elements.");
+    return NULL;
   }
   key_val_node_t * item = list->_head;
   if (item->_next == NULL)
@@ -87,9 +87,11 @@ int dkey_val_list_pop_front(dkey_val_list_t * list)
     list->_head = item->_next;
   }
 
-  int val = item->_data->_value;
+  dkey_val_pair_t * pair = dkey_val_pair_new(item->_data->key, 
+      item->_data->value);
+
   key_val_node_destroy(item);
-  return val;
+  return pair;
 }
 
 bool dkey_val_list_try_get(dkey_val_list_t * list, const char * key, int * out)
@@ -103,17 +105,17 @@ bool dkey_val_list_try_get(dkey_val_list_t * list, const char * key, int * out)
   key_val_node_t *next = current->_next;
 
   // Check head
-  if (strcmp(current->_data->_key, key) == 0)
+  if (strcmp(current->_data->key, key) == 0)
   {
-    *out = current->_data->_value;
+    *out = current->_data->value;
     return true;
   }
   // Check rest of list
   while (next != NULL)
   {
-    if (strcmp(next->_data->_key, key) == 0)
+    if (strcmp(next->_data->key, key) == 0)
     {
-      *out = next->_data->_value;
+      *out = next->_data->value;
       return true;
     }
     current = next;
@@ -135,17 +137,17 @@ bool dkey_val_list_try_update(dkey_val_list_t * list, const char * key, int valu
   key_val_node_t *next = current->_next;
 
   // Check head
-  if (strcmp(current->_data->_key, key) == 0)
+  if (strcmp(current->_data->key, key) == 0)
   {
-    current->_data->_value = value;
+    current->_data->value = value;
     return true;
   }
   // Check rest of list
   while (next != NULL)
   {
-    if (strcmp(next->_data->_key, key) == 0)
+    if (strcmp(next->_data->key, key) == 0)
     {
-      next->_data->_value = value;
+      next->_data->value = value;
       return true;
     }
     current = next;
@@ -167,7 +169,7 @@ bool dkey_val_list_remove(dkey_val_list_t * list, const char *key)
   key_val_node_t *next = current->_next;
 
   // Need to handle deleting the head differently
-  if (strcmp(current->_data->_key, key) == 0)
+  if (strcmp(current->_data->key, key) == 0)
   {
     // Need to handle if this is also the tail
     if (list->_tail == current)
@@ -186,7 +188,7 @@ bool dkey_val_list_remove(dkey_val_list_t * list, const char *key)
   // Wasn't the head, start searching rest of list
   while (next != NULL)
   {
-    if (strcmp(next->_data->_key, key) == 0)
+    if (strcmp(next->_data->key, key) == 0)
     {
       current->_next = next->_next;
       // Move tail if needed
@@ -207,35 +209,17 @@ bool dkey_val_list_remove(dkey_val_list_t * list, const char *key)
 
 
 // Private function definitions
-key_val_pair_t * key_val_pair_new(const char * key, int value)
-{
-  key_val_pair_t * pair = (key_val_pair_t *)(malloc(sizeof(key_val_pair_t)));
-
-  pair->_key = (char *)(malloc(strlen(key) + 1));
-  strcpy(pair->_key, key);
-
-  pair->_value = value;
-
-  return pair;
-}
-
-void key_val_pair_destroy(key_val_pair_t *pair)
-{
-  free(pair->_key);
-  free(pair);
-}
-
 key_val_node_t * key_val_node_new(const char * key, int value)
 {
   key_val_node_t * node = (key_val_node_t *)(malloc(sizeof(key_val_node_t)));
 
-  node->_data = key_val_pair_new(key, value);
+  node->_data = dkey_val_pair_new(key, value);
   node->_next = NULL;
   return node;
 }
 
 void key_val_node_destroy(key_val_node_t * node)
 {
-  key_val_pair_destroy(node->_data);
+  dkey_val_pair_destroy(node->_data);
   free(node);
 }
