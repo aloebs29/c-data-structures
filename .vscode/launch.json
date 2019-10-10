@@ -8,7 +8,7 @@
           "name": "(gdb) main",
           "type": "cppdbg",
           "request": "launch",
-          "program": "${workspaceFolder}/build/release/data-structures-practice.exe",
+          "program": "${workspaceFolder}/build/release/c-data-structures.exe",
           "args": [],
           "stopAtEntry": false,
           "cwd": "${workspaceFolder}",

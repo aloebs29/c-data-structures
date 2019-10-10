@@ -17,7 +17,7 @@
     - test:all
 
 :release_build:
-  :output: data-structures-practice.exe
+  :output: c-data-structures.exe
 #  :use_assembly: FALSE
 
 :flags:
