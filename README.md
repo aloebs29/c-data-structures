@@ -6,7 +6,7 @@ Implementations of the following data structures in C:
   - Singly-linked key/value list for use in hash table
   - Hash table with string keys and integer values, implemented with chaining, djb2 hash
 
-Each module has a test file associated with it (test_<module name>.c). Tests were written using the Unity unit testing framework (via ceedling). Ceedling will need to be installed according to the instructions [here](https://github.com/ThrowTheSwitch/Ceedling) in order to run the tests.
+Each module has a test file associated with it (test_\<module name\>.c). Tests were written using the Unity unit testing framework (via ceedling). Ceedling will need to be installed according to the instructions [here](https://github.com/ThrowTheSwitch/Ceedling) in order to run the tests.
 
 ## Module interfaces:
   - Dynamic array (dvector_t):
