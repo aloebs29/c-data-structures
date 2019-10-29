@@ -1,5 +1,5 @@
-#ifndef _DVECTOR_H
-#define _DVECTOR_H
+#ifndef _VECTOR_H
+#define _VECTOR_H
 
 #include <stdbool.h> // bool
 
@@ -13,35 +13,35 @@ typedef struct {
   int _size;
   int _capacity;
   int *_data;
-} dvector_t;
+} vector_t;
 
 // Creates a vector with at least the given capacity
-dvector_t *dvector_new(int capacity);
+vector_t *vector_new(int capacity);
 // Destroys vector
-void dvector_destroy(dvector_t *vec);
+void vector_destroy(vector_t *vec);
 // Returns capacity field (we want it treated as private by module users)
-int dvector_capacity(dvector_t *vec);
+int vector_capacity(vector_t *vec);
 // Returns size field (we want it treated as private by module users)
-int dvector_size(dvector_t *vec);
+int vector_size(vector_t *vec);
 // Returns true if vector has 0 elements
-bool dvector_is_empty(dvector_t *vec);
+bool vector_is_empty(vector_t *vec);
 // Returns item at given index, exit failure if out of range
-int dvector_at(dvector_t *vec, int index);
+int vector_at(vector_t *vec, int index);
 // Adds item to end of vector
-void dvector_push(dvector_t *vec, int item);
+void vector_push(vector_t *vec, int item);
 // Inserts item at selected index
-void dvector_insert(dvector_t *vec, int index, int item);
+void vector_insert(vector_t *vec, int index, int item);
 // Inserts item at beginning of vector
-void dvector_prepend(dvector_t *vec, int item);
+void vector_prepend(vector_t *vec, int item);
 // Removes item from end of vector, returns item
-int dvector_pop(dvector_t *vec);
+int vector_pop(vector_t *vec);
 // Delete item at index, shifts all other items left
-int dvector_delete(dvector_t *vec, int index);
+int vector_delete(vector_t *vec, int index);
 // Removes every item matching the specified value
-int dvector_remove(dvector_t *vec, int value);
+int vector_remove(vector_t *vec, int value);
 // Looks for value and returns first index with that value, -1 if not found
-int dvector_find(dvector_t *vec, int value);
+int vector_find(vector_t *vec, int value);
 
 
 
-#endif // _DVECTOR_H
+#endif // _VECTOR_H

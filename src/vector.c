@@ -1,22 +1,22 @@
-#include "dvector.h"
+#include "vector.h"
 #include <stdlib.h> // malloc, free
 #include "helpers.h" // error_print_and_quit
 
 
 // Private function prototypes
 static int calculate_capacity(int capacity);
-static void resize(dvector_t *vec, int new_capacity);
+static void resize(vector_t *vec, int new_capacity);
 // Grows vector if needed to add item
-static void secure_capacity_for_add(dvector_t *vec);
+static void secure_capacity_for_add(vector_t *vec);
 // Shrinks vector if _size is less than capacity/SHRINK_AT_DIVISOR 
-static void reduce_capacity_if_able(dvector_t *vec);
+static void reduce_capacity_if_able(vector_t *vec);
 
 // Public functions
-dvector_t *dvector_new(int capacity)
+vector_t *vector_new(int capacity)
 {
   int calculated_cap = calculate_capacity(capacity);
 
-  dvector_t *vec = (dvector_t *)malloc(sizeof(dvector_t));
+  vector_t *vec = (vector_t *)malloc(sizeof(vector_t));
   vec->_size = 0;
   vec->_capacity = calculated_cap;
   vec->_data = (int *)malloc(sizeof(int) * calculated_cap);
@@ -24,40 +24,40 @@ dvector_t *dvector_new(int capacity)
   return vec;
 }
 
-void dvector_destroy(dvector_t *vec)
+void vector_destroy(vector_t *vec)
 {
   free(vec->_data);
   free(vec);
 }
 
-int dvector_capacity(dvector_t *vec)
+int vector_capacity(vector_t *vec)
 {
   return vec->_capacity;
 }
 
-int dvector_size(dvector_t *vec)
+int vector_size(vector_t *vec)
 {
   return vec->_size;
 }
 
-bool dvector_is_empty(dvector_t *vec)
+bool vector_is_empty(vector_t *vec)
 {
   return vec->_size == 0;
 }
 
-int dvector_at(dvector_t *vec, int index)
+int vector_at(vector_t *vec, int index)
 {
   // Validate index
   if ((index < 0) || (index >= vec->_size))
   {
-    error_print_and_quit("dvector_at index out of range.");
+    error_print_and_quit("vector_at index out of range.");
   }
 
   int * address = (int *)(vec->_data + index);
   return *address;
 }
 
-void dvector_push(dvector_t *vec, int item)
+void vector_push(vector_t *vec, int item)
 {
   secure_capacity_for_add(vec);
   // Add item, increment _size
@@ -66,12 +66,12 @@ void dvector_push(dvector_t *vec, int item)
   vec->_size++;
 }
 
-void dvector_insert(dvector_t *vec, int index, int item)
+void vector_insert(vector_t *vec, int index, int item)
 {
   // Validate index (we will allow inserting onto the end (essentially a push))
   if ((index < 0) || (index > vec->_size))
   {
-    error_print_and_quit("dvector_insert index out of range.");
+    error_print_and_quit("vector_insert index out of range.");
   }
 
   secure_capacity_for_add(vec);
@@ -88,12 +88,12 @@ void dvector_insert(dvector_t *vec, int index, int item)
   *address = item;
 }
 
-void dvector_prepend(dvector_t *vec, int item)
+void vector_prepend(vector_t *vec, int item)
 {
-  dvector_insert(vec, 0, item);
+  vector_insert(vec, 0, item);
 }
 
-int dvector_pop(dvector_t *vec)
+int vector_pop(vector_t *vec)
 {
   // Store value to be popped
   int * address = (int *)(vec->_data + vec->_size - 1);
@@ -106,12 +106,12 @@ int dvector_pop(dvector_t *vec)
   return value;
 }
 
-int dvector_delete(dvector_t *vec, int index)
+int vector_delete(vector_t *vec, int index)
 {
   // Validate index
   if ((index < 0) || (index >= vec->_size))
   {
-    error_print_and_quit("dvector_delete index out of range.");
+    error_print_and_quit("vector_delete index out of range.");
   }
   // We need to return the item we delete
   int * item_to_delete_address = (int *)(vec->_data + index);
@@ -129,24 +129,24 @@ int dvector_delete(dvector_t *vec, int index)
   return item_to_delete_value;
 }
 
-int dvector_remove(dvector_t *vec, int value)
+int vector_remove(vector_t *vec, int value)
 {
   for (int i = 0; i < vec->_size; i ++)
   {
     int * address = (int *)(vec->_data + i);
     if (*address == value) 
     {
-      dvector_delete(vec, i);
+      vector_delete(vec, i);
       // This will shift left, so we need to decrement i manually
       i--;
     }
   }
 
-  // No need to reduce capacity since our dvector_delete call will do that 
+  // No need to reduce capacity since our vector_delete call will do that 
   // internally
 }
 
-int dvector_find(dvector_t *vec, int value)
+int vector_find(vector_t *vec, int value)
 {
   for (int i = 0; i < vec->_size; i ++)
   {
@@ -171,7 +171,7 @@ static int calculate_capacity(int capacity)
   }
   return calculated_cap;
 }
-static void resize(dvector_t *vec, int new_capacity)
+static void resize(vector_t *vec, int new_capacity)
 {
   int * new_data = (int *)malloc(sizeof(int) * new_capacity);
   for (int i = 0; i < vec->_size; i ++)
@@ -184,7 +184,7 @@ static void resize(dvector_t *vec, int new_capacity)
   vec->_data = new_data;
   vec->_capacity = new_capacity;
 }
-static void secure_capacity_for_add(dvector_t *vec)
+static void secure_capacity_for_add(vector_t *vec)
 {
   if (vec->_size == vec->_capacity)
   {
@@ -192,7 +192,7 @@ static void secure_capacity_for_add(dvector_t *vec)
     resize(vec, new_cap);
   }
 }
-static void reduce_capacity_if_able(dvector_t *vec)
+static void reduce_capacity_if_able(vector_t *vec)
 {
   if ((vec->_size <= (vec->_capacity / SHRINK_AT_DIVISOR)) &&
       (vec->_capacity != DEFAULT_CAPACITY))

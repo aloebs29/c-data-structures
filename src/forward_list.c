@@ -1,23 +1,23 @@
-#include "dforward_list.h"
+#include "forward_list.h"
 #include <stdlib.h> // malloc, free
 #include "helpers.h" // error_print_and_quit
 
 // Private functions prototypes
 static node_t * node_new(int value);
 static void node_destroy(node_t * node);
-static node_t * node_in_list_at(dforward_list_t * list, int index);
+static node_t * node_in_list_at(forward_list_t * list, int index);
 
 // Public functions
-dforward_list_t * dforward_list_new()
+forward_list_t * forward_list_new()
 {
-  dforward_list_t * list = (dforward_list_t *)(malloc(sizeof(dforward_list_t)));
+  forward_list_t * list = (forward_list_t *)(malloc(sizeof(forward_list_t)));
   list->_head = NULL;
   list->_tail = NULL;
 
   return list;
 }
 
-void dforward_list_destroy(dforward_list_t * list)
+void forward_list_destroy(forward_list_t * list)
 {
   // Free nodes
   node_t * current = list->_head;
@@ -32,7 +32,7 @@ void dforward_list_destroy(dforward_list_t * list)
   free(list);
 }
 
-void dforward_list_push_front(dforward_list_t * list, int value)
+void forward_list_push_front(forward_list_t * list, int value)
 {
   node_t * node = node_new(value);
 
@@ -45,14 +45,14 @@ void dforward_list_push_front(dforward_list_t * list, int value)
   }
 }
 
-bool dforward_list_is_empty(dforward_list_t * list)
+bool forward_list_is_empty(forward_list_t * list)
 {
   return (list->_head == NULL);
 }
 
-int dforward_list_size(dforward_list_t * list)
+int forward_list_size(forward_list_t * list)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
     return 0;
   }
@@ -67,21 +67,21 @@ int dforward_list_size(dforward_list_t * list)
   return size;
 }
 
-int dforward_list_at(dforward_list_t * list, int index)
+int forward_list_at(forward_list_t * list, int index)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
-    error_print_and_quit("dforward_list_at list argument null.");
+    error_print_and_quit("forward_list_at list argument null.");
   }
   if (index < 0)
   {
-    error_print_and_quit("dforward_list_at index must be greater than 0.");
+    error_print_and_quit("forward_list_at index must be greater than 0.");
   }
 
   return node_in_list_at(list, index)->_key;
 }
 
-void dforward_list_push_back(dforward_list_t * list, int value)
+void forward_list_push_back(forward_list_t * list, int value)
 {
   node_t * node = node_new(value);
 
@@ -97,15 +97,15 @@ void dforward_list_push_back(dforward_list_t * list, int value)
   }
 }
 
-int dforward_list_at_from_end(dforward_list_t * list, int index)
+int forward_list_at_from_end(forward_list_t * list, int index)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
-    error_print_and_quit("dforward_list_at_from_end list argument null.");
+    error_print_and_quit("forward_list_at_from_end list argument null.");
   }
   if (index < 0)
   {
-    error_print_and_quit("dforward_list_at_from_end index must be greater than 0.");
+    error_print_and_quit("forward_list_at_from_end index must be greater than 0.");
   }
 
   // We'll use a pointer as a probe which is "index" elements ahead of our item
@@ -122,11 +122,11 @@ int dforward_list_at_from_end(dforward_list_t * list, int index)
   return item->_key;
 }
 
-int dforward_list_pop_front(dforward_list_t * list)
+int forward_list_pop_front(forward_list_t * list)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
-    error_print_and_quit("dforward_list_pop_front list must contain elements.");
+    error_print_and_quit("forward_list_pop_front list must contain elements.");
   }
   node_t * item = list->_head;if (item->_next == NULL)
   {
@@ -143,11 +143,11 @@ int dforward_list_pop_front(dforward_list_t * list)
   return val;
 }
 
-int dforward_list_pop_back(dforward_list_t * list)
+int forward_list_pop_back(forward_list_t * list)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
-    error_print_and_quit("dforward_list_pop_back list must contain elements.");
+    error_print_and_quit("forward_list_pop_back list must contain elements.");
   }
   int val = list->_tail->_key;
   
@@ -163,35 +163,35 @@ int dforward_list_pop_back(dforward_list_t * list)
   return val;
 }
 
-int dforward_list_front(dforward_list_t * list)
+int forward_list_front(forward_list_t * list)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
-    error_print_and_quit("dforward_list_front list must contain elements.");
+    error_print_and_quit("forward_list_front list must contain elements.");
   }
   return list->_head->_key;
 }
 
-int dforward_list_back(dforward_list_t * list)
+int forward_list_back(forward_list_t * list)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
-    error_print_and_quit("dforward_list_back list must contain elements.");
+    error_print_and_quit("forward_list_back list must contain elements.");
   }
   return list->_tail->_key;
 }
 
-void dforward_list_insert(dforward_list_t * list, int index, int value)
+void forward_list_insert(forward_list_t * list, int index, int value)
 {
   if (index < 0)
   {
-    error_print_and_quit("dforward_list_insert index must be greater than 0.");
+    error_print_and_quit("forward_list_insert index must be greater than 0.");
   }
 
   // Handle special case for index 0
   if (index == 0)
   {
-    dforward_list_push_front(list, value);
+    forward_list_push_front(list, value);
   }
 
   node_t * previous_element = node_in_list_at(list, index - 1);
@@ -205,29 +205,29 @@ void dforward_list_insert(dforward_list_t * list, int index, int value)
   }
 }
 
-int dforward_list_delete(dforward_list_t * list, int index)
+int forward_list_delete(forward_list_t * list, int index)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
-    error_print_and_quit("dforward_list_delete list argument null.");
+    error_print_and_quit("forward_list_delete list argument null.");
   }
   if (index < 0)
   {
-    error_print_and_quit("dforward_list_delete index must be greater than 0.");
+    error_print_and_quit("forward_list_delete index must be greater than 0.");
   }
 
   int val;
   // Handle special case for index 0
   if (index == 0)
   {
-    val = dforward_list_pop_front(list);
+    val = forward_list_pop_front(list);
   }
   else
   {
     node_t * previous_element = node_in_list_at(list, index - 1);
     if (previous_element->_next == NULL)
     {
-      error_print_and_quit("dforward_list_delete index out of range.");
+      error_print_and_quit("forward_list_delete index out of range.");
     }
     node_t * deleted_element = previous_element->_next;
     val = deleted_element->_key;
@@ -242,9 +242,9 @@ int dforward_list_delete(dforward_list_t * list, int index)
   return val;  
 }
 
-void dforward_list_reverse(dforward_list_t * list)
+void forward_list_reverse(forward_list_t * list)
 {
-  int size = dforward_list_size(list);
+  int size = forward_list_size(list);
   if (size == 0 || size == 1)
   {
     return; // reversed list is identical to current
@@ -265,9 +265,9 @@ void dforward_list_reverse(dforward_list_t * list)
   }
 }
 
-void dforward_list_remove(dforward_list_t * list, int value)
+void forward_list_remove(forward_list_t * list, int value)
 {
-  if (dforward_list_is_empty(list))
+  if (forward_list_is_empty(list))
   {
     return; // nothing to remove
   }
@@ -327,7 +327,7 @@ static void node_destroy(node_t * node)
   free(node);
 }
 
-static node_t * node_in_list_at(dforward_list_t * list, int index)
+static node_t * node_in_list_at(forward_list_t * list, int index)
 {
   node_t * current = list->_head;
   for (int i = 0; i < index; i++)
