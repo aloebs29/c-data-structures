@@ -3,14 +3,14 @@
 
 #include <stdbool.h> // bool
 
-typedef struct node {
+typedef struct list_node {
   int _key;
-  struct node *_next;
-} node_t;
+  struct list_node *_next;
+} list_node_t;
 
 typedef struct {
-  node_t * _head;
-  node_t * _tail;
+  list_node_t * _head;
+  list_node_t * _tail;
 } forward_list_t;
 
 // Creates an empty forward list

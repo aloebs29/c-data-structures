@@ -20,7 +20,7 @@ void key_val_list_destroy(key_val_list_t * list)
 {
   // Free nodes
   key_val_node_t * current = list->_head;
-  while (current != NULL)
+  while (current)
   {
     key_val_node_t * next = current->_next;
     key_val_node_destroy(current);
@@ -50,7 +50,7 @@ void key_val_pair_destroy(key_val_pair_t *pair)
 
 bool key_val_list_is_empty(key_val_list_t * list)
 {
-  return (list->_head == NULL);
+  return (!list->_head);
 }
 
 void key_val_list_push_back(key_val_list_t * list, const char * key,
@@ -58,7 +58,7 @@ void key_val_list_push_back(key_val_list_t * list, const char * key,
 {
   key_val_node_t * node = key_val_node_new(key, value);
 
-  if (list->_tail == NULL)
+  if (!list->_tail)
   {
     list->_head = node;
     list->_tail = node;
@@ -77,7 +77,7 @@ key_val_pair_t * key_val_list_pop_front(key_val_list_t * list)
     return NULL;
   }
   key_val_node_t * item = list->_head;
-  if (item->_next == NULL)
+  if (!item->_next)
   {
     list->_head = NULL;
     list->_tail = NULL;
@@ -111,7 +111,7 @@ bool key_val_list_try_get(key_val_list_t * list, const char * key, int * out)
     return true;
   }
   // Check rest of list
-  while (next != NULL)
+  while (next)
   {
     if (strcmp(next->_data->key, key) == 0)
     {
@@ -143,7 +143,7 @@ bool key_val_list_try_update(key_val_list_t * list, const char * key, int value)
     return true;
   }
   // Check rest of list
-  while (next != NULL)
+  while (next)
   {
     if (strcmp(next->_data->key, key) == 0)
     {
@@ -186,7 +186,7 @@ bool key_val_list_remove(key_val_list_t * list, const char *key)
   }
 
   // Wasn't the head, start searching rest of list
-  while (next != NULL)
+  while (next)
   {
     if (strcmp(next->_data->key, key) == 0)
     {

@@ -4,6 +4,7 @@
     "stdio.h": "c",
     "error_handling.h": "c",
     "unity.h": "c",
-    "stdint.h": "c"
+    "stdint.h": "c",
+    "math.h": "c"
   }
 }

@@ -29,7 +29,7 @@ void hash_table_destroy(hash_table_t * table)
   // Free any allocated lists
   for (int i = 0; i < table->_table_size; i++)
   {
-    if (table->_data[i] != NULL)
+    if (table->_data[i])
     {
       key_val_list_destroy(table->_data[i]);
     }
@@ -42,7 +42,7 @@ void hash_table_destroy(hash_table_t * table)
 void hash_table_add(hash_table_t * table, const char * key, int value)
 {
   uint32_t slot = hash(key, table->_table_size);
-  if (table->_data[slot] == NULL)
+  if (!table->_data[slot])
   {
     table->_data[slot] = key_val_list_new();
   }
@@ -65,7 +65,7 @@ bool hash_table_exists(hash_table_t * table, const char * key)
 bool hash_table_try_get(hash_table_t * table, const char * key, int * out)
 {
   uint32_t slot = hash(key, table->_table_size);
-  if (table->_data[slot] == NULL)
+  if (!table->_data[slot])
   {
     return false;
   }
@@ -78,7 +78,7 @@ bool hash_table_try_get(hash_table_t * table, const char * key, int * out)
 void hash_table_remove(hash_table_t * table, const char * key)
 {
   uint32_t slot = hash(key, table->_table_size);
-  if (table->_data[slot] != NULL)
+  if (table->_data[slot])
   {
     if (key_val_list_remove(table->_data[slot], key))
     {
@@ -151,16 +151,16 @@ static void rehash_table(hash_table_t * table, uint32_t new_table_size)
   // Iterate through old data
   for (int i = 0; i < table->_table_size; i++)
   {
-    if (table->_data[i] != NULL)
+    if (table->_data[i])
     {
       if (!key_val_list_is_empty(table->_data[i]))
       {
         key_val_pair_t * current = key_val_list_pop_front(table->_data[i]);
-        while (current != NULL)
+        while (current)
         {
           // Add to new table
           uint32_t slot = hash(current->key, new_table_size);
-          if (new_data[slot] == NULL)
+          if (!new_data[slot])
           {
             new_data[slot] = key_val_list_new();
           }
