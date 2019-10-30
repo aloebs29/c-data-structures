@@ -13,10 +13,12 @@ static void tree_search(bst_node_t * root, bool * found, int val);
 static int tree_get_height(bst_node_t * root);
 static int tree_get_min(bst_node_t * root);
 static int tree_get_max(bst_node_t * root);
+static int tree_traverse_and_append(bst_node_t * root, int * buffer, 
+    int * index);
 static void tree_remove(bst_node_t * parent, bst_node_t * current, int val);
 static void tree_delete_node(bst_node_t * parent, bst_node_t * to_destroy);
-static void tree_destroy_min(bst_node_t * root, int * val_out,
-    int * count_out);
+static void tree_destroy_min(bst_node_t * parent, bst_node_t * root, 
+    int * val_out, int * count_out);
 
 static int max(int i1, int i2);
 
@@ -125,6 +127,23 @@ int bst_get_max(bst_t * tree)
   }
 }
 
+int * bst_flatten(bst_t * tree)
+{
+  if (!tree->_root)
+  {
+    return NULL;
+  }
+  else
+  {
+    int size = bst_get_count(tree);
+    int * array = (int *)malloc(sizeof(int) * size);
+    int * index = (int *)malloc(sizeof(int));
+    *index = 0;
+    tree_traverse_and_append(tree->_root, array, index);
+    return array;
+  }
+}
+
 void bst_remove(bst_t * tree, int val)
 {
   if (!tree->_root)
@@ -139,19 +158,21 @@ void bst_remove(bst_t * tree, int val)
     }
     else
     {
-      node_destroy(tree->_root);
-      tree->_root = NULL;
+      if (!tree->_root->_left && !tree->_root->_right)
+      {
+        node_destroy(tree->_root);
+        tree->_root = NULL;
+      }
+      else
+      {
+        tree_remove(NULL, tree->_root, val);
+      }
     }
   }
   else
   {
     tree_remove(NULL, tree->_root, val);
   }
-}
-
-int * bst_flatten(bst_t * tree)
-{
-
 }
 
 // Private function definitions
@@ -299,11 +320,31 @@ static int tree_get_max(bst_node_t * root)
 {
   if (root->_right)
   {
-    return tree_get_min(root->_right);
+    return tree_get_max(root->_right);
   }
   else
   {
     return root->_key;
+  }
+}
+
+static int tree_traverse_and_append(bst_node_t * root, int * buffer, 
+    int * index)
+{
+  if (root->_left)
+  {
+    tree_traverse_and_append(root->_left, buffer, index);
+  }
+  int val = root->_key;
+  int target_index = *index + root->_count;
+  while (*index < target_index)
+  {
+    buffer[*index] = val;
+    (*index)++;
+  }
+  if (root->_right)
+  {
+    tree_traverse_and_append(root->_right, buffer, index);
   }
 }
 
@@ -373,25 +414,32 @@ static void tree_delete_node(bst_node_t * parent, bst_node_t * to_destroy)
     int new_val;
     int new_count;
     // destroy successor
-    tree_destroy_min(to_destroy->_right, &new_val, &new_count);
+    tree_destroy_min(to_destroy, to_destroy->_right, &new_val, &new_count);
     to_destroy->_key = new_val;
     to_destroy->_count = new_count;
   }
 }
 
-static void tree_destroy_min(bst_node_t * root, int * val_out,
-    int * count_out)
+static void tree_destroy_min(bst_node_t * parent, bst_node_t * root, 
+    int * val_out, int * count_out)
 {
   if (!root->_left)
   {
-    *val_out = root->_left->_key;
-    *count_out = root->_left->_count;
-    node_destroy(root->_left);
-    root->_left = NULL;
+    if (parent->_left == root)
+    {
+      parent->_left = NULL;
+    }
+    else
+    {
+      parent->_right = NULL;
+    }
+    *val_out = root->_key;
+    *count_out = root->_count;
+    node_destroy(root);
   }
   else
   {
-    tree_destroy_min(root->_left, val_out, count_out);
+    tree_destroy_min(root, root->_left, val_out, count_out);
   }
 }
 
