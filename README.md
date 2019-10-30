@@ -67,3 +67,16 @@ Each module has a test file associated with it (test_\<module name\>.c). Tests w
     - hash_table_exists - checks if key/value pair exists
     - hash_table_try_get - attempts to get value associated with given key
     - hash_table_remove - removes key/value pair from hash table
+
+  - Binary search tree (bst_t)
+    - bst_new - creates new binary search tree
+    - bst_destroy - frees tree
+    - bst_insert - inserts value into tree
+    - bst_get_count - returns the number of items in the tree (includes duplicates)
+    - bst_get_node_count - returns the number of nodes in the tree (this will implicitly exclude duplicates)
+    - bst_is_in_tree - searches for value, returns true if value is in the tree
+    - bst_get_height - returns height of the tree
+    - bst_get_min - returns the minimum value in the tree
+    - bst_get_max - returns the maximum value in the tree
+    - bst_flatten - returns an array containing the values in the tree in ascending order
+    - bst_remove - removes one instance of the given value from the tree (if it exists)

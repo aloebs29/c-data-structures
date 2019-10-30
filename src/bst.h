@@ -32,7 +32,8 @@ int bst_get_height(bst_t * tree);
 int bst_get_min(bst_t * tree);
 // Returns maximum value in tree
 int bst_get_max(bst_t * tree);
-// Returns an array containing the values in the tree in ascending order
+// Returns an array containing the values in the tree in ascending order -- must
+// be freed by user
 int * bst_flatten(bst_t * tree);
 // Removes one instance of the given value from the tree, if it exists
 void bst_remove(bst_t * tree, int val);
