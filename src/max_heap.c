@@ -18,7 +18,7 @@ max_heap_t * max_heap_new(int capacity)
   }
 
   max_heap_t * heap = (max_heap_t *)(malloc(sizeof(max_heap_t)));
-  heap->_data = (int *)(sizeof(int) * capacity);
+  heap->_data = (int *)(malloc(sizeof(int) * capacity));
   heap->_capacity = capacity;
   heap->_size = 0;
 
