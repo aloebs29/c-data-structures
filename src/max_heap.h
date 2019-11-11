@@ -4,8 +4,9 @@
 #include <stdbool.h> // bool
 
 typedef struct {
-  int * data;
-  int capacity;
+  int * _data;
+  int _capacity;
+  int _size;
 } max_heap_t;
 
 // Creates empty max heap with the given capacity
