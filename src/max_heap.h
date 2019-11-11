@@ -22,9 +22,7 @@ bool max_heap_try_insert(max_heap_t * heap, int value);
 int max_heap_get_max(max_heap_t * heap);
 // Returns the max value, removes from heap
 int max_heap_extract_max(max_heap_t * heap);
-// Creates max heap from array of elements
-max_heap_t * max_heapify(int * arr, int len);
 // Sorts array
-int * max_heap_sort(int * arr, int len);
+void max_heap_sort(int * arr, int len);
 
 #endif // _MAX_HEAP_H

@@ -81,5 +81,22 @@ void test_is_empty()
   TEST_ASSERT_TRUE(max_heap_is_empty(heap));
 }
 
-// max_heap_t * max_heapify(int * arr, int len);
-// int * max_heap_sort(int * arr, int len);
+void test_sort()
+{
+  // Doesn't break @ size 1
+  int test1[] = { 3 };
+  max_heap_sort(test1, 1);
+  TEST_ASSERT_EQUAL(3, test1[0]);
+
+  // General case
+  int test2[] = { 5, 3, 6, 1, 2, 99, 42, -3 };
+  max_heap_sort(test2, sizeof(test2) / sizeof(*test2));
+  TEST_ASSERT_EQUAL(-3, test2[0]);
+  TEST_ASSERT_EQUAL(1, test2[1]);
+  TEST_ASSERT_EQUAL(2, test2[2]);
+  TEST_ASSERT_EQUAL(3, test2[3]);
+  TEST_ASSERT_EQUAL(5, test2[4]);
+  TEST_ASSERT_EQUAL(6, test2[5]);
+  TEST_ASSERT_EQUAL(42, test2[6]);
+  TEST_ASSERT_EQUAL(99, test2[7]);
+}
