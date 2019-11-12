@@ -80,3 +80,12 @@ Each module has a test file associated with it (test_\<module name\>.c). Tests w
     - bst_get_max - returns the maximum value in the tree
     - bst_flatten - returns an array containing the values in the tree in ascending order
     - bst_remove - removes one instance of the given value from the tree (if it exists)
+
+  - Max heap (max_heap_t)
+    - max_heap_new - creates new max heap with a given capacity
+    - max_heap_destroy - frees heap
+    - max_heap_is_empty - returns true if heap is empty
+    - max_heap_try_insert - adds value to heap and returns true if heap has capacity
+    - max_heap_get_max - returns the max value (without removing it from the heap)
+    - max_heap_extract_max - returns the max value, removes it from the heap
+    - max_heap_sort - uses heap sort to sort the input array in place
