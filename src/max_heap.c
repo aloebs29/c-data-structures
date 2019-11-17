@@ -76,6 +76,10 @@ int max_heap_extract_max(max_heap_t * heap)
 
 void max_heap_sort(int * arr, int len)
 {
+  if (len <= 1)
+  {
+    return;
+  }
   heapify(arr, len);
   for (int i = (len - 1); i > 0; i--)
   {

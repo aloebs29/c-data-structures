@@ -5,6 +5,7 @@
     "error_handling.h": "c",
     "unity.h": "c",
     "stdint.h": "c",
-    "math.h": "c"
+    "math.h": "c",
+    "max_heap.h": "c"
   }
 }
