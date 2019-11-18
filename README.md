@@ -6,6 +6,9 @@ Implementations of the following data structures in C:
   - Singly-linked key/value list for use in hash table
   - Hash table with string keys and integer values, implemented with chaining, djb2 hash
 
+Other:
+  - Heap sort, quick sort, and merge sort
+
 Each module has a test file associated with it (test_\<module name\>.c). Tests were written using the Unity unit testing framework (via ceedling). Ceedling will need to be installed according to the instructions [here](https://github.com/ThrowTheSwitch/Ceedling) in order to run the tests.
 
 ## Module interfaces:
@@ -89,3 +92,8 @@ Each module has a test file associated with it (test_\<module name\>.c). Tests w
     - max_heap_get_max - returns the max value (without removing it from the heap)
     - max_heap_extract_max - returns the max value, removes it from the heap
     - max_heap_sort - uses heap sort to sort the input array in place
+
+  - Sort
+    - heap_sort - wrapper for max_heap_sort function from max heap module
+    - quick_sort - implementation using Hoare partition
+    - merge_sort

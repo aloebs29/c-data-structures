@@ -6,6 +6,7 @@
     "unity.h": "c",
     "stdint.h": "c",
     "math.h": "c",
-    "max_heap.h": "c"
+    "max_heap.h": "c",
+    "limits.h": "c"
   }
 }

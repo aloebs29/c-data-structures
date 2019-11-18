@@ -1,5 +1,6 @@
 #include "sort.h"
 #include <stdlib.h> // malloc(), free(), rand()
+#include <limits.h>
 #include "max_heap.h"
 
 // Private function prototypes
@@ -30,6 +31,7 @@ void merge_sort(int * arr, int len)
     return;
   }
 
+  // Create shadow array to swap between
   int * temp = (int *)malloc(sizeof(int) * len);
   bool into_temp = false;
   for (int merge_size = 1; merge_size < len; merge_size *= 2)
@@ -66,14 +68,6 @@ void merge_sort(int * arr, int len)
 void heap_sort(int * arr, int len)
 {
   max_heap_sort(arr, len);
-}
-
-void radix_sort(int * arr, int len)
-{
-  if (len <= 1)
-  {
-    return;
-  }
 }
 
 // Private function definitions

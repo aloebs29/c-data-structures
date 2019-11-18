@@ -9,8 +9,14 @@ int main(int argc, char **argv)
   printf("\t- Qeue with array or singly-linked list backing (qeue_t).\n");
   printf("\t- Singly-linked key/value list for use in hash table (key_val_list_t).\n");
   printf("\t- Hash table (hash_table_t).\n");
-  printf("\t- Binary search tree (bst_t).");
-  printf("\t- Max heap (max_heap_t).");
+  printf("\t- Binary search tree (bst_t).\n");
+  printf("\t- Max heap (max_heap_t).\n");
+
+  printf("\nOther:\n");
+  printf("\t- Sorting:\n");
+  printf("\t\t- Heap sort (heap_sort)\n");
+  printf("\t\t- Quick sort (quick_sort)\n");
+  printf("\t\t- Merge sort (merge_sort)\n");
 
   printf("\nGo to root project folder, and run \"ceedling test:all\" to run tests.\n");
   printf("Press ENTER key to exit.\n");
