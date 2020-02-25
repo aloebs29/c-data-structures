@@ -2,7 +2,7 @@
 Implementations of the following data structures in C:
   - Dynamic array
   - Singly-linked list
-  - Qeue with array or singly-linked list backing
+  - queue with array or singly-linked list backing
   - Singly-linked key/value list for use in hash table
   - Hash table with string keys and integer values, implemented with chaining, djb2 hash
 
@@ -44,14 +44,14 @@ Each module has a test file associated with it (test_\<module name\>.c). Tests w
     - forward_list_reverse - reverses the list
     - forward_list_remove - removes all items matching the specified value
     
-  - Qeue (qeue_t)
-    - qeue_new_as_array - creates new qeue with array backing with given capacity
-    - qeue_new_as_list - creates new qeue with singly-linked list backing
-    - qeue_destroy - frees qeue
-    - qeue_enqeue - adds item to back of qeue
-    - qeue_deqeue - removes item from front of qeue, returns value
-    - qeue_is_empty - returns true if qeue is empty
-    - qeue_is_full - returns true if qeue is full (only happens with array backing)
+  - Queue (queue_t)
+    - queue_new_as_array - creates new queue with array backing with given capacity
+    - queue_new_as_list - creates new queue with singly-linked list backing
+    - queue_destroy - frees queue
+    - queue_enqueue - adds item to back of queue
+    - queue_dequeue - removes item from front of queue, returns value
+    - queue_is_empty - returns true if queue is empty
+    - queue_is_full - returns true if queue is full (only happens with array backing)
     
   - Singly-linked key/value list -- interface specifically designed for use in hash table (key_val_list_t):
     - key_val_list_new - creates new list
