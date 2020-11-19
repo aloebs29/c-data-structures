@@ -11,6 +11,8 @@ Other:
 
 Each module has a test file associated with it (test_\<module name\>.c). Tests were written using the Unity unit testing framework (via ceedling). Ceedling will need to be installed according to the instructions [here](https://github.com/ThrowTheSwitch/Ceedling) in order to run the tests.
 
+These were written for the purpose of practice, and are not intended to be used in an actual project (especially not an embedded project due to the usage of malloc).
+
 ## Module interfaces:
   - Dynamic array (vector_t):
     - vector_new - creates new array
