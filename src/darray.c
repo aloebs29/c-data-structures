@@ -37,20 +37,28 @@ static int resize(struct darray *d, unsigned int new_capacity)
 
 static int ensure_capacity_for_add(struct darray *d, unsigned int add_count)
 {
-    if ((d->_size + DARRAY_OFF_AT(d, add_count)) > d->_capacity) {
-        unsigned int new_cap = d->_capacity * GROWTH_FACTOR;
-        return resize(d, new_cap);
-    }
+    // figure out new capacity
+    const unsigned int required_capacity = d->_size + DARRAY_OFF_AT(d, add_count);
+    unsigned int new_capacity = d->_capacity;
+    while (required_capacity > new_capacity) new_capacity *= GROWTH_FACTOR;
+
+    if (new_capacity != d->_capacity) 
+        return resize(d, new_capacity);
+    
     return 0;
 }
 
 static void reduce_capacity_if_able(struct darray *d)
 {
-    if ((d->_size <= (d->_capacity / SHRINK_AT_DIVISOR)) && 
-            (d->_capacity != DARRAY_OFF_AT(d, DEFAULT_CAPACITY))) {
+    // figure out minimum capacity
+    unsigned int new_capacity = d->_capacity;
+    while ((d->_size <= (new_capacity / SHRINK_AT_DIVISOR)) && 
+            (new_capacity != DARRAY_OFF_AT(d, DEFAULT_CAPACITY)))
+        new_capacity /= GROWTH_FACTOR;
+
+    if (new_capacity != d->_capacity)
         // NOTE (aloebs): If resize fails, the old data array will be intact, which is fine here.
-        resize(d, (d->_capacity / GROWTH_FACTOR));
-    }
+        resize(d, new_capacity);
 }
 
 // Public function implementations

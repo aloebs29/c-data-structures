@@ -1,19 +1,15 @@
-from dataclasses import dataclass
+import dataclasses
 import subprocess
-import re
 
 import halfling
 import git
 
-EXECUTABLE_NAME = "test_data_structures"
 BUILD_DIR = "build"
 SRC_DIR = "src"
 TEST_DIR = "test"
 
-NO_SETUP_FLAG = "HALFLING_NO_SETUP"
-
 build_options = halfling.builders.CxxBuildOptions(
-    executable_name=EXECUTABLE_NAME,
+    executable_name="",
     compiler="clang",
     build_dir=BUILD_DIR,
     sources=[],
@@ -22,22 +18,6 @@ build_options = halfling.builders.CxxBuildOptions(
     include_paths=["src"],
     create_compile_flags_txt=True,
 )
-
-@dataclass
-class TestInfo:
-    name: str
-    has_setup_teardown: bool
-
-def find_tests(test_file_path):
-    pattern = re.compile("void (test_.+?)\(.*?\)\s*(?:////\s*(\w+))?\n")
-    matches = pattern.findall(open(test_file_path).read())
-    tests = []
-    for match in matches:
-        tests.append(TestInfo(
-            match[0],
-            match[1] != NO_SETUP_FLAG,
-        ))
-    return tests
 
 
 def make_header_contents(module_name, author, brief=None):
@@ -96,34 +76,15 @@ f"""/**
 #include "{module_name}.h"
 
 
-"""
 
-
-def make_test_runner(test_dir_path, test_files, tests):
-    output = f"""#include <stdarg.h>
-#include <stddef.h>
-#include <setjmp.h>
-#include <cmocka.h>
-"""
-    for file in test_files:
-        output += f"#include \"{file}\"\n"
-
-    output += """int main(void)
-{
-    const struct CMUnitTest tests[] = {
-"""
-
-    for test in tests:
-        if test.has_setup_teardown:
-            output += f"cmocka_unit_test_setup_teardown({test.name}, setup, teardown),\n"
-        else:
-            output += f"cmocka_unit_test({test.name}),\n"
-    output += """
-    };
+int main(void)
+{{
+    const struct CMUnitTest tests[] = {{
+    }};
 
     return cmocka_run_group_tests(tests, NULL, NULL);
-}"""
-    return output
+}}
+"""
 
 
 # Tasks ---
@@ -157,35 +118,33 @@ def test_add_args(parser):
 
 def test(args):
     test_dir = halfling.utils.get_project_base_dir() / TEST_DIR
-    test_files = []
+    modules = []
     if args.module == "all":
-        test_files.extend([path.name for path in test_dir.glob("test_*.c")])
+        modules.extend([str(path.stem).replace("test_", "") for path in test_dir.glob("test_*.c")])
     else:
-        test_files.append(f"test_{args.module}.c")
+        modules.append(args.module)
 
-    tests = []
-    for test_file in test_files:
-        tests.extend(find_tests(test_dir / test_file))
-
-    test_runner = test_dir / "main.c"
-    with (test_runner).open(mode="w") as f:
-        f.write(make_test_runner(halfling.utils.get_project_base_dir() / TEST_DIR, test_files, 
-                                 tests))
-
-    # NOTE (aloebs): Derive sources from tests -- this is a little hacky, but we want to glob on 
-    # the test directory when matching 'all', in case a module does not yet have a test.
     src_dir = halfling.utils.get_project_base_dir() / SRC_DIR
-    sources = [(src_dir / (test_file.replace("test_", ""))) for test_file in test_files]
-    sources = [source for source in sources if source.exists()]
-    build_options.sources.extend(sources)
-    build_options.sources.append(test_runner)
+    executables = []
+    for module in modules:
+        executable_name = f"test_{module}"
+        sources = [src_dir / f"{module}.c", test_dir / f"test_{module}.c"]
+        sources = [source for source in sources if source.exists()] # support header-only modules
+        build_test_options = dataclasses.replace(
+            build_options,
+            executable_name=executable_name,
+            sources=sources
+        )
+        halfling.builders.CxxBuilder(build_test_options).build()
 
-    try:
-        halfling.builders.CxxBuilder(build_options).build()
-        subprocess.run([halfling.utils.get_project_base_dir() / BUILD_DIR / EXECUTABLE_NAME])
-    finally:
-        pass
-        # test_runner.unlink()
+        executables.append(executable_name)
+
+    summary = "\nSummary:\n"
+    for exe in executables:
+        proc = subprocess.run(halfling.utils.get_project_base_dir() / BUILD_DIR / exe)
+        status = "FAILED" if proc.returncode else "PASSED"
+        summary += f"{exe:20}| {status}\n"
+    print(summary)
 
 
 halfling.tasks.add_task("new", make_new_module, make_new_module_add_args)

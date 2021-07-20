@@ -46,7 +46,7 @@ void darray_clear(struct darray *d);
 #define DARRAY_PFOREACH(d, pvar, type) \
     for (type *pvar = DARRAY_PAT(d, 0, type); \
             pvar != DARRAY_PAT(d, DARRAY_COUNT(d), type); \
-            *pvar++)
+            pvar++)
 
 
 #endif // DARRAY_H_
