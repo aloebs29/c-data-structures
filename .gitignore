@@ -51,5 +51,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# Ceedling things
+__pycache__
 build
+compile_flags.txt
