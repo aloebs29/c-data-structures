@@ -3,8 +3,6 @@
 #include <setjmp.h>
 #include <cmocka.h>
 
-#include <stdlib.h>
-
 #include "darray.h"
 #include "array.h"
 
@@ -16,7 +14,7 @@
 
 static int setup(void **state)
 {
-    struct darray *d = darray_new(sizeof(int));
+    struct darray *d = darray_new(sizeof(int), NULL, NULL);
     if (!d) return -1;
 
     *state = d;
@@ -31,7 +29,7 @@ static int teardown(void **state)
 
 static void test_new(void **state)
 {
-    struct darray *d = darray_new(sizeof(int));
+    struct darray *d = darray_new(sizeof(int), NULL, NULL);
 
     assert_non_null(d);
     assert_non_null(d->_data);
